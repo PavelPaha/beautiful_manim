@@ -92,3 +92,5 @@ class tree(Slide):
         self.end_loop()
         self.pause()
         #  manim .\pythagoreen_tree.py -p -ql
+        # manim  .\pythagoreen_tree.py tree
+        # manim-slides tree
