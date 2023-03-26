@@ -151,7 +151,7 @@ class BisectionMethodScene(MovingCameraScene):
         self.camera.frame.save_state()
 
         # Добавление точек на сцену
-        self.add(dot_a, dot_b, dot_c)
+        self.play(Write(dot_a), Write(dot_b), Write(dot_c))
 
         line_a = DashedLine(axes.c2p(a, axes.y_range[0]), axes.c2p(a, axes.y_range[1]), stroke_color=GREEN_C)
         line_b = DashedLine(axes.c2p(b, axes.y_range[0]), axes.c2p(b, axes.y_range[1]), stroke_color=GREEN_C)
