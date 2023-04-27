@@ -24,15 +24,15 @@ class KNN(Scene):
         y1 = b.get_y()
         return (x - x1) ** 2 + (y - y1)**2
     def construct(self):
-        x_size = 8
-        y_size = 6
+        x_size = 15
+        y_size = 8
 
         particles = VGroup()
         xs = np.random.normal(0, 1, self.data_size)
         ys = np.random.normal(0, 1, self.data_size)
-        rectangle_size = 1
+        rectangle_size = 1/2
         k_colors = {0: '#9CDCEB', 1: '#9D52B0', 2: '#D03A2D'}
-        intro = Tex("KNN")
+        intro = Text("KNN")
 
         self.play(Write(intro, color='#9CDCEB'))
         self.wait()
@@ -43,19 +43,21 @@ class KNN(Scene):
 
         self.play(Write(particles))
         rectangles = VGroup()
-        for i in range(int(x_size*y_size//(rectangle_size**2))):
+        for i in range(int(x_size*y_size/(rectangle_size**2))):
             rectangles.add(Rectangle(width=rectangle_size, height=rectangle_size, stroke_width=0, fill_color='#FFFFFF',
                                 fill_opacity=0.7, z_index=1))
 
-        rectangles = rectangles.arrange_in_grid(y_size//rectangle_size, x_size//rectangle_size, buff=0)
+        rectangles = rectangles.arrange_in_grid(int(y_size/rectangle_size), int(x_size/rectangle_size), buff=0)
         self.create_knn_grid(rectangles, particles)
         self.play(Write(rectangles))
         self.wait(2)
-        random_sample = self.select_random_sample(particles)
+        random_samples = [self.select_random_sample(particles) for _ in range(4)]
         rectangles = always_redraw(lambda: self.create_knn_grid(rectangles, particles))
-        self.play(random_sample.animate.shift(DOWN))
-        self.wait()
-        self.play(random_sample.animate.rotate(np.pi*7/8))
+        directions = [LEFT, UP, RIGHT, DOWN]
+        for i in range(len(random_samples)):
+            self.play(random_samples[i].animate.shift(directions[i%len(directions)]))
+            self.wait()
+            self.play(random_samples[i].animate.rotate(np.pi*(2*i+1)/8))
         self.play(FadeOut(particles))
         self.wait()
         self.play(FadeOut(rectangles))
