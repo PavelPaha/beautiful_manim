@@ -85,6 +85,35 @@ class L_system(Scene):
                 angle-=rotate*2/3
         return tree
 
+    def build_fractal1(self, n, length, rotate=25):
+        vertices = []
+        edges = []
+        rotate=math.radians(rotate)
+        cursor = 3*DOWN
+        angle = math.pi/2
+        stack = []
+        rule = {'F': 'FF', 'X': 'F[+X]F[-X]+X'}
+        s = self.build_plant_string("X", n, rule)
+        vertices_count = 0
+        for i in range(len(s)):
+            if s[i]=='[':
+                stack.append([cursor, angle])
+            elif s[i]==']':
+                cursor, angle = stack.pop()
+            elif s[i]=='F':
+                end = [cursor[0]+length*np.cos(angle), cursor[1]+length*np.sin(angle), 0]
+                vertices+=[vertices_count]
+                if vertices_count>0:
+                    edges+=[(vertices_count-1,vertices_count)]
+                vertices_count += 1
+                cursor = end
+            elif i=='+':
+                angle+=rotate
+            elif i=='-':
+                angle-=rotate*2/3
+
+        g = Graph(vertices, edges)
+        return g
 
     def construct(self):
         # print(self.build_plant_string("X", 10))
@@ -98,7 +127,7 @@ class L_system(Scene):
         # self.wait(2)
         # self.play(a.animate.set_value(90), length.animate.set_value(0), run_tume=3)
         # self.build_fractal(2)
-        self.play(FadeIn(self.build_fractal(2, 0.5)))
+        self.play(FadeIn(self.build_fractal1(2, 0.5)))
 
 
 
